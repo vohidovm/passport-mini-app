@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passport MRZ Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #00FF00;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #00FF00;
+        }
+        input[type="file"] {
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #00FF00;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00CC00;
+        }
+        #result {
+            margin-top: 20px;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Passport MRZ Scanner</h1>
+    <p>MRZ (pastdagi 2 qator) ni rasm orqali tekshiring</p>
+    
+    <input type="file" id="fileInput" accept="image/*">
+    <br>
+    <button onclick="scanMRZ()">Scan MRZ</button>
+
+    <div id="result"></div>
+
+    <script>
+        function scanMRZ() {
+            const fileInput = document.getElementById('fileInput');
+            const resultDiv = document.getElementById('result');
+
+            if (!fileInput.files.length) {
+                resultDiv.innerHTML = "Iltimos, rasm tanlang!";
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const form = new FormData();
+            form.append("image", file);
+
+            // Fetch URL — Render server URL bilan almashtirish kerak
+            fetch("https://passport-mini-app.onrender.com/scan", {
+    method: "POST",
+    body: form
+})
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.innerHTML = `<b>Natija:</b> ${data.result} <br><b>MRZ:</b> ${data.mrz || 'Topilmadi'}`;
+            })
+            .catch(err => {
+                resultDiv.innerHTML = "Xatolik yuz berdi: " + err;
+            });
+        }
+    </script>
+</body>
+</html>
